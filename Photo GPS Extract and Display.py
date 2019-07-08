@@ -131,7 +131,7 @@ class Explorer:
 
 
 class ExifTool:
-    noExifData = list()  # list of files with no exif data
+    noExifData = list()  # list of files with no exif data - Not saved as txt
     noSpecificData = list()  # list of files with no specific exif data
     gpsKeyError = list()
 
@@ -231,19 +231,18 @@ def display():
 
     root = tkinter.Tk()
     root.title("Photo GPS Extract, Save, Display and Drive Explorer")
-    display = tkinter.Canvas(root, width=cWidth, height=cHeight)   
+    display = tkinter.Canvas(root, width=cWidth, height=cHeight)
     display.pack()
 
-    importImg = Image.open(
-        "Kagawa.png")
+    importImg = Image.open("Kagawa.png")
     KagawaMap = ImageTk.PhotoImage(importImg)
     importImg.close()
     display.create_image(0, 0, anchor=tkinter.NW, image=KagawaMap)
 
-    ox = 133.412
-    oy = 34.587
-    scaleX = 1069.2408
-    scaleY = -1300.6015
+    ox = 133.412  # GPS coordinates of origin x point (longitude) - eyeballed
+    oy = 34.587  # GPS coordinates of origin y point (latitude) - eyeballed
+    scaleX = 1069.2408  # image width / ((originX + refPointX) / 2)
+    scaleY = -1300.6015  # image height / ((originY + refPointY) / 2)
 
     images = []  # to hold the newly created image
 
@@ -252,7 +251,7 @@ def display():
             # take alpha and fill, remove words and take numbers.
             alpha = int(kwargs.pop('alpha') * 255)
             fill = kwargs.pop('fill')
-            # tkinter return tuple of RGB and add alpha as another tuple element
+            # tkinter return tuple of RGB and add alpha as tuple element
             fill = root.winfo_rgb(fill) + (alpha,)
             # PIL new image called RGBA at width, height, with RGBA input
             image = Image.new('RGBA', (x2-x1, y2-y1), fill)
@@ -261,8 +260,6 @@ def display():
             # display last image in list before displaying new image
             display.create_image(x1, y1, image=images[-1], anchor='nw')
         display.create_rectangle(x1, y1, x2, y2, outline="", **kwargs)
-
-
 
     for i in range(0, len(data)):
         inputX = data[i][1]
@@ -275,7 +272,6 @@ def display():
         dotX2 = int(xPos + 2)
         dotY1 = int(yPos - 2)
         dotY2 = int(yPos + 2)
-
 
         create_rectangle(dotX1, dotY1, dotX2, dotY2, fill="red", alpha=.05)
 
